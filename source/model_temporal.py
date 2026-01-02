@@ -8,8 +8,16 @@ from .tcn import TemporalConvNet
 
 
 class LSTMSeqNetwork(torch.nn.Module):
-    def __init__(self, input_size, out_size, batch_size, device,
-                 lstm_size=100, lstm_layers=3, dropout=0):
+    def __init__(
+        self,
+        input_size,
+        out_size,
+        batch_size,
+        device,
+        lstm_size=100,
+        lstm_layers=3,
+        dropout=0,
+    ):
         """
         Simple LSTM network
         Input: torch array [batch x frames x input_size]
@@ -31,9 +39,15 @@ class LSTMSeqNetwork(torch.nn.Module):
         self.batch_size = batch_size
         self.device = device
 
-        self.lstm = torch.nn.LSTM(self.input_size, self.lstm_size, self.num_layers, batch_first=True, dropout=dropout)
+        self.lstm = torch.nn.LSTM(
+            self.input_size,
+            self.lstm_size,
+            self.num_layers,
+            batch_first=True,
+            dropout=dropout,
+        )
         self.linear1 = torch.nn.Linear(self.lstm_size, self.output_size * 5)
-        self.linear2 = torch.nn.Linear(self.output_size*5, self.output_size)
+        self.linear2 = torch.nn.Linear(self.output_size * 5, self.output_size)
         self.hidden = self.init_weights()
 
     def forward(self, input, hidden=None):
@@ -51,8 +65,16 @@ class LSTMSeqNetwork(torch.nn.Module):
 
 
 class BilinearLSTMSeqNetwork(torch.nn.Module):
-    def __init__(self, input_size, out_size, batch_size, device,
-                 lstm_size=100, lstm_layers=3, dropout=0):
+    def __init__(
+        self,
+        input_size,
+        out_size,
+        batch_size,
+        device,
+        lstm_size=100,
+        lstm_layers=3,
+        dropout=0,
+    ):
         """
         LSTM network with Bilinear layer
         Input: torch array [batch x frames x input_size]
@@ -74,9 +96,19 @@ class BilinearLSTMSeqNetwork(torch.nn.Module):
         self.batch_size = batch_size
         self.device = device
 
-        self.bilinear = torch.nn.Bilinear(self.input_size, self.input_size, self.input_size * 4)
-        self.lstm = torch.nn.LSTM(self.input_size * 5, self.lstm_size, self.num_layers, batch_first=True, dropout=dropout)
-        self.linear1 = torch.nn.Linear(self.lstm_size + self.input_size * 5, self.output_size * 5)
+        self.bilinear = torch.nn.Bilinear(
+            self.input_size, self.input_size, self.input_size * 4
+        )
+        self.lstm = torch.nn.LSTM(
+            self.input_size * 5,
+            self.lstm_size,
+            self.num_layers,
+            batch_first=True,
+            dropout=dropout,
+        )
+        self.linear1 = torch.nn.Linear(
+            self.lstm_size + self.input_size * 5, self.output_size * 5
+        )
         self.linear2 = torch.nn.Linear(self.output_size * 5, self.output_size)
         self.hidden = self.init_weights()
 
@@ -98,7 +130,9 @@ class BilinearLSTMSeqNetwork(torch.nn.Module):
 
 
 class TCNSeqNetwork(torch.nn.Module):
-    def __init__(self, input_channel, output_channel, kernel_size, layer_channels, dropout=0.2):
+    def __init__(
+        self, input_channel, output_channel, kernel_size, layer_channels, dropout=0.2
+    ):
         """
         Temporal Convolution Network with PReLU activations
         Input: torch array [batch x frames x input_size]
@@ -131,4 +165,4 @@ class TCNSeqNetwork(torch.nn.Module):
         self.output_layer.bias.data.normal_(0, 0.001)
 
     def get_receptive_field(self):
-        return 1 + 2 * (self.kernel_size - 1) * (2 ** self.num_layers - 1)
+        return 1 + 2 * (self.kernel_size - 1) * (2**self.num_layers - 1)

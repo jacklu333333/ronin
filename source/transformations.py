@@ -23,7 +23,10 @@ def change_cf(ori, vectors):
     q_r = ori[:, 1:]
 
     tmp = np.cross(q_r, vectors)
-    vectors = np.add(np.add(vectors, np.multiply(2, np.multiply(q_s, tmp))), np.multiply(2, np.cross(q_r, tmp)))
+    vectors = np.add(
+        np.add(vectors, np.multiply(2, np.multiply(q_s, tmp))),
+        np.multiply(2, np.cross(q_r, tmp)),
+    )
     return vectors
 
 
@@ -70,8 +73,9 @@ class RandomHoriRotate:
 
     def __call__(self, feat, targ, **kwargs):
         angle = np.random.random() * self.max_angle
-        rm = np.array([[math.cos(angle), -math.sin(angle)],
-                       [math.sin(angle), math.cos(angle)]])
+        rm = np.array(
+            [[math.cos(angle), -math.sin(angle)], [math.sin(angle), math.cos(angle)]]
+        )
         feat_aug = np.copy(feat)
         targ_aug = np.copy(targ)
         feat_aug[:, :2] = np.matmul(rm, feat[:, :2].T).T
@@ -99,16 +103,22 @@ class RandomHoriRotateSeq:
         t = np.array([np.cos(a), 0, 0, np.sin(a)])
 
         for i in range(len(self.i_f) - 1):
-            feature[:, self.i_f[i]: self.i_f[i + 1]] = \
-                change_cf(t, feature[:, self.i_f[i]: self.i_f[i + 1]])
+            feature[:, self.i_f[i] : self.i_f[i + 1]] = change_cf(
+                t, feature[:, self.i_f[i] : self.i_f[i + 1]]
+            )
 
         for i in range(len(self.o_f) - 1):
             if self.o_f[i + 1] - self.o_f[i] == 3:
-                vector = target[:, self.o_f[i]: self.o_f[i + 1]]
-                target[:, self.o_f[i]: self.o_f[i + 1]] = change_cf(t, vector)
+                vector = target[:, self.o_f[i] : self.o_f[i + 1]]
+                target[:, self.o_f[i] : self.o_f[i + 1]] = change_cf(t, vector)
             elif self.o_f[i + 1] - self.o_f[i] == 2:
-                vector = np.concatenate([target[:, self.o_f[i]: self.o_f[i + 1]], np.zeros([target.shape[0], 1])],
-                                        axis=1)
-                target[:, self.o_f[i]: self.o_f[i + 1]] = change_cf(t, vector)[:, :2]
+                vector = np.concatenate(
+                    [
+                        target[:, self.o_f[i] : self.o_f[i + 1]],
+                        np.zeros([target.shape[0], 1]),
+                    ],
+                    axis=1,
+                )
+                target[:, self.o_f[i] : self.o_f[i + 1]] = change_cf(t, vector)[:, :2]
 
         return feature.astype(np.float32), target.astype(np.float32)

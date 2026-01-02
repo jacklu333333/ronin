@@ -34,7 +34,9 @@ class MSEAverageMeter:
         return np.average(self.average)
 
     def get_elements(self, axis):
-        return np.concatenate(self.predictions, axis=axis), np.concatenate(self.targets, axis=axis)
+        return np.concatenate(self.predictions, axis=axis), np.concatenate(
+            self.targets, axis=axis
+        )
 
 
 def load_config(default_config, args, unknown_args):
@@ -56,8 +58,8 @@ def load_config(default_config, args, unknown_args):
             return float(y)
         except:
             pass
-        if y == 'True' or y == 'False':
-            return y == 'True'
+        if y == "True" or y == "False":
+            return y == "True"
         else:
             return y
 
@@ -70,19 +72,19 @@ def load_config(default_config, args, unknown_args):
 
     i = 0
     while i < len(unknown_args):
-        if unknown_args[i].startswith('--'):
-            token = unknown_args[i].lstrip('-')
+        if unknown_args[i].startswith("--"):
+            token = unknown_args[i].lstrip("-")
             options = []
             i += 1
-            while i < len(unknown_args) and not unknown_args[i].startswith('--'):
+            while i < len(unknown_args) and not unknown_args[i].startswith("--"):
                 options.append(convert_value(unknown_args[i]))
                 i += 1
             kwargs[token] = convert_arrry(options)
 
-    if 'config' in kwargs:
-        args.config = kwargs['config']
-        del kwargs['config']
-    with open(args.config, 'r') as f:
+    if "config" in kwargs:
+        args.config = kwargs["config"]
+        del kwargs["config"]
+    with open(args.config, "r") as f:
         config = json.load(f)
 
     values = vars(args)
@@ -94,20 +96,20 @@ def load_config(default_config, args, unknown_args):
                 if remove:
                     del dictionary[key]
 
-    add_missing_config(kwargs, True)        # specified args listed as unknowns
-    add_missing_config(config)              # configuration from file for unspecified variables
-    if args.config != default_config:       # default config
-        with open(default_config, 'r') as f:
+    add_missing_config(kwargs, True)  # specified args listed as unknowns
+    add_missing_config(config)  # configuration from file for unspecified variables
+    if args.config != default_config:  # default config
+        with open(default_config, "r") as f:
             default_configs = json.load(f)
         add_missing_config(default_configs)
 
     try:
         if args.channels is not None and type(args.channels) is str:
-            args.channels = [int(i) for i in args.channels.split(',')]
+            args.channels = [int(i) for i in args.channels.split(",")]
     except:
         pass
 
-    if 'kwargs' in config:
-        kwargs = {**config['kwargs'], **kwargs}
+    if "kwargs" in config:
+        kwargs = {**config["kwargs"], **kwargs}
 
     return args, kwargs

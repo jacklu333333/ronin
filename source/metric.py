@@ -35,13 +35,15 @@ def compute_relative_trajectory_error(est, gt, delta, max_delta=-1):
     """
     if max_delta == -1:
         max_delta = est.shape[0]
-    deltas = np.array([delta]) if delta > 0 else np.arange(1, min(est.shape[0], max_delta))
+    deltas = (
+        np.array([delta]) if delta > 0 else np.arange(1, min(est.shape[0], max_delta))
+    )
     rtes = np.zeros(deltas.shape[0])
     for i in range(deltas.shape[0]):
         # For each delta, the RTE is computed as the RMSE of endpoint drifts from fixed windows
         # slided through the trajectory.
-        err = est[deltas[i]:] + gt[:-deltas[i]] - est[:-deltas[i]] - gt[deltas[i]:]
-        rtes[i] = np.sqrt(np.mean(err ** 2))
+        err = est[deltas[i] :] + gt[: -deltas[i]] - est[: -deltas[i]] - gt[deltas[i] :]
+        rtes[i] = np.sqrt(np.mean(err**2))
 
     # The average of RTE of all window sized is returned.
     return np.mean(rtes)
@@ -71,7 +73,7 @@ def compute_heading_error(est, gt):
         MSE error and angle difference from dot product
     """
 
-    mse_error = np.mean((est-gt)**2)
+    mse_error = np.mean((est - gt) ** 2)
     dot_prod = np.sum(est * gt, axis=1)
     angle = np.arccos(np.clip(dot_prod, a_min=-1, a_max=1))
 
