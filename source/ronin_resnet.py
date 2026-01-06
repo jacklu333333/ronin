@@ -16,11 +16,16 @@ from .transformations import *
 from .metric import compute_ate_rte
 from .model_resnet1d import *
 
-_input_channel, _output_channel = 6, 2
-_fc_config = {"fc_dim": 512, "in_dim": 7, "dropout": 0.5, "trans_planes": 128}
+# _input_channel, _output_channel = 6, 2
+# _fc_config = {"fc_dim": 512, "in_dim": 7, "dropout": 0.5, "trans_planes": 128}
 
 
-def get_model(arch):
+def get_model(
+    arch,
+    _input_channel=6,
+    _output_channel=2,
+    _fc_config={"fc_dim": 512, "in_dim": 7, "dropout": 0.5, "trans_planes": 128},
+):
     if arch == "resnet18":
         network = ResNet1D(
             _input_channel,
