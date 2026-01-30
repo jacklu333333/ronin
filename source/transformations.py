@@ -1,7 +1,7 @@
-import numpy as np
-import quaternion
 import math
 
+import numpy as np
+import quaternion
 from numba import jit
 from scipy.ndimage.filters import gaussian_filter1d
 

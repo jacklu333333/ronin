@@ -12,11 +12,12 @@ from torch.utils.data import DataLoader
 
 sys.path.append(osp.join(osp.dirname(osp.abspath(__file__)), ".."))
 
-from model_temporal import LSTMSeqNetwork
-from data_glob_heading import HeadingSequence, HeadingDataset
-from transformations import ComposeTransform, RandomHoriRotateSeq
-from metric import compute_heading_error
+from data_glob_heading import HeadingDataset, HeadingSequence
 from math_util import adjust_angle_array
+from metric import compute_heading_error
+from model_temporal import LSTMSeqNetwork
+from transformations import ComposeTransform, RandomHoriRotateSeq
+
 from utils import load_config
 
 torch.multiprocessing.set_sharing_strategy("file_system")
@@ -442,8 +443,9 @@ def traj_from_velocity(vel, freq=200):
 
 def test(args, **kwargs):
     from pathlib import Path
-    import matplotlib.pyplot as plt
+
     import matplotlib.patches as mpatch
+    import matplotlib.pyplot as plt
 
     global _device
 

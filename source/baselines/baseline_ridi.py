@@ -22,8 +22,8 @@ from baselines.data_stabilized_local_speed import (
     StabilizedLocalSpeedDataset,
     StabilizedLocalSpeedSequence,
 )
-from metric import compute_absolute_trajectory_error, compute_relative_trajectory_error
 from math_util import *
+from metric import compute_absolute_trajectory_error, compute_relative_trajectory_error
 
 _feature_dim, _target_dim = 6, 2
 

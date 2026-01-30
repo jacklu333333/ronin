@@ -1,5 +1,5 @@
-import sys
 import os.path as osp
+import sys
 
 import torch
 from torch.autograd import Variable
